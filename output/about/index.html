@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#14110E">
+<title>About | WordSound</title>
+<meta name="description" content="How WordSound counts syllables: built on CMUdict, Carnegie Mellon&#x27;s pronunciation dictionary, with honest notes on where the count is estimated or contested.">
+<link rel="canonical" href="https://wordsound.online/about/">
+<meta property="og:title" content="About | WordSound">
+<meta property="og:description" content="How WordSound counts syllables: built on CMUdict, Carnegie Mellon&#x27;s pronunciation dictionary, with honest notes on where the count is estimated or contested.">
+<meta property="og:url" content="https://wordsound.online/about/">
+<meta property="og:image" content="https://wordsound.online/og-image.png">
+<meta name="twitter:image" content="https://wordsound.online/og-image.png">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/assets/css/list.css">
+<link rel="stylesheet" href="/assets/css/about.css">
+<script>try{var t=localStorage.getItem("wordsound_theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.2C.5 8.2 2.6 5 6 5c2 0 3.5 1.1 6 3.4C14.5 6.1 16 5 18 5c3.4 0 5.5 3.2 4 6.8-2.5 4.6-10 9.2-10 9.2z"/></symbol>
+</svg>
+<header class="ws-header"><div class="wrap">
+  <a class="wordmark" href="/"><span class="line1">WORD SOUND</span><span class="line2">&middot; Online &middot;</span></a>
+  <nav class="ws-nav">
+    <a href="/">Syllable Counter</a>
+    <a href="/2-syllable-words/">Word Lists</a>
+    <a href="/about/">About</a>
+  </nav>
+  <div class="header-actions">
+    <span class="fav-pill"><svg class="ico"><use href="#i-heart"/></svg> <span id="fav-count">0</span><span class="fav-label"> Favorites</span></span>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></button>
+  </div>
+</div></header>
+
+<div class="wrap"><div class="about-body">
+<h1>About WordSound</h1>
+<p class="intro">WordSound counts syllables. Type a word, a sentence, or a whole poem, and
+the counter shows a number for every line, plus a stress pattern where one is known. There
+are also nine word lists &mdash; two-syllable words, closed-syllable words, and so on &mdash;
+for anyone who wants to browse or search rather than type one word at a time.</p>
+
+<h2>Where the data comes from</h2>
+<p>Every syllable count here starts with <a href="https://github.com/cmusphinx/cmudict"
+rel="noopener">CMUdict</a>, Carnegie Mellon University's pronunciation dictionary. It covers
+roughly 134,000 English words, each transcribed as a sequence of phonemes with stress marked
+on every vowel sound.</p>
+
+<h2>How the count is derived</h2>
+<p>A syllable count is just the number of stressed vowel phonemes in a word's transcription
+&mdash; one per syllable, by definition. The syllable split you see (like &ldquo;beau &middot;
+ti &middot; ful&rdquo;) is reconstructed by walking that phoneme sequence back onto the
+original spelling, which is why it's usually exact but occasionally approximate.</p>
+
+<h2>Where it can be wrong, on purpose</h2>
+<p>Some words genuinely have more than one correct answer. &ldquo;Fire,&rdquo;
+&ldquo;hour,&rdquo; and &ldquo;every&rdquo; can be said with fewer syllables in casual speech
+than in their full, careful pronunciation. This site counts the fuller form &mdash; the one a
+dictionary would cite &mdash; and says so on a word's own page when that choice is
+contestable.</p>
+<p>Words outside CMUdict are estimated from spelling rules instead of a real transcription,
+and marked with &asymp; wherever they appear. A handful of syllable splits are also
+hand-corrected, for words where the automatic phoneme-to-spelling mapping produces a wrong or
+misleading-looking break.</p>
+
+<h2>Who this is for</h2>
+<p>Teachers building phonics lessons, speech-language pathologists who need a quick reference,
+parents helping with homework, and poets counting beats &mdash; that's who this was built
+for.</p>
+</div></div>
+
+<footer class="ws-footer"><div class="wrap">
+  <div class="footer-grid">
+    <div>
+      <a class="wordmark" href="/" style="color:var(--ink)"><span class="line1">WORD SOUND</span><span class="line2">&middot; Online &middot;</span></a>
+      <p class="footer-tagline">Tools for writers, teachers, parents, and word lovers.</p>
+    </div>
+    <div><h3>Tools</h3><ul><li><a href="/syllable-counter/">Syllable Counter</a></li><li><a href="/2-syllable-words/">Word Lists</a></li></ul></div>
+    <div><h3>Help</h3><ul><li><a href="/about/">How It Works</a></li><li><a href="/about/">About</a></li></ul></div>
+    <div><h3>Data</h3><p class="footer-tagline">Built on CMUdict, Carnegie Mellon's pronunciation dictionary.</p></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 wordsound.online</div>
+</div></footer>
+<script>
+(function () {
+  "use strict";
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) themeBtn.addEventListener("click", function () {
+    var current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    var next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("wordsound_theme", next); } catch (e) {}
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  try {
+    var favs = JSON.parse(localStorage.getItem("wordsound_favorites") || "[]");
+    var el = document.getElementById("fav-count");
+    if (el) el.textContent = favs.length;
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

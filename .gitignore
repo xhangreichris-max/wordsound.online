@@ -1,0 +1,18 @@
+# Downloaded on demand by parse_cmudict.ensure_data_files() -- see there
+# for why scowl_70.txt is committed instead (not on this list).
+data/cmudict.dict
+data/count_1w.txt
+
+# Rebuilt by build.py
+data/words.json
+data/counter_dict.json
+data/rhyme_index.json
+
+__pycache__/
+*.pyc
+.venv/
+
+# Ad-hoc Playwright/verification scripts and captures, not part of the site
+test_*.js
+*.spec.js
+screenshots/

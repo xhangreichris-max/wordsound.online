@@ -1,0 +1,81 @@
+/* WordSound word page (Task 1). Shares tokens/header/footer/sprite pattern
+   with assets/css/list.css (linked alongside this file) -- this file only
+   adds the answer-first layout: answer card, scansion columns, tags,
+   callouts, and the sibling-word cross-links (which reuse list.css's .wr
+   row styling untouched). */
+
+.answer-hero { padding: 40px 0 20px; text-align: center; }
+.answer-hero h1 {
+  font-family: var(--serif); font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  margin: 0 0 24px; line-height: 1.2;
+}
+
+.answer-card {
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 4px;
+  max-width: 520px; margin: 0 auto; padding: 40px; text-align: center;
+}
+.answer-number {
+  font-family: var(--serif); font-size: 120px; line-height: 1; margin: 0;
+  color: var(--stress); font-weight: 700;
+}
+.answer-unit {
+  margin: 4px 0 20px; font-size: 0.8rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--unstress);
+}
+
+/* Split text + scansion mark live in one column per syllable so the mark
+   sits directly under ITS syllable no matter how wide neighboring
+   syllables render. The interpunct dot gets its own column with a blank
+   mark row (non-breaking space) so it never inherits a stress glyph. */
+.answer-syllables { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+.syl-col { display: flex; flex-direction: column; align-items: center; padding: 0 5px; }
+.syl-txt { font-family: var(--serif); font-size: 32px; line-height: 1.15; color: var(--ink); }
+.syl-dot .syl-txt { color: var(--unstress); }
+.syl-mark { font-family: var(--serif); font-size: 2.1rem; line-height: 1; margin-top: 6px; }
+.syl-mark.s { color: var(--stress); }
+.syl-mark.u { color: var(--unstress); }
+
+.answer-stress { margin: 22px 0 0; color: var(--unstress); font-size: 0.95rem; }
+.tag-row { display: flex; justify-content: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.tag {
+  font-size: 0.78rem; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--rule);
+  color: var(--unstress); background: var(--wash);
+}
+.tag.open { border-color: var(--stress); color: var(--stress); background: transparent; }
+
+.word-below { max-width: 680px; padding: 8px 0 56px; }
+
+.callout, .tricky-note {
+  background: var(--wash); border-radius: 8px; padding: 16px 20px; margin: 0 0 20px;
+  font-size: 0.95rem;
+}
+.tricky-note h2 { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--unstress); margin: 0 0 8px; }
+.tricky-note p { margin: 0; color: var(--ink); }
+.muted-note { color: var(--unstress); font-size: 0.85rem; margin: 0 0 20px; }
+
+.crosslinks { border-top: 1px solid var(--rule); padding-top: 24px; }
+.crosslinks h2 { font-family: var(--serif); font-size: 1.15rem; margin: 0 0 12px; }
+.see-all-link { margin: 0 0 20px; }
+.see-all-link a, .cta-link a { color: var(--stress); text-decoration: none; font-weight: 600; }
+.see-all-link a:hover, .cta-link a:hover { text-decoration: underline; }
+.sibling-rows .wr:last-child { border-bottom: none; }
+.cta-link { margin: 20px 0 0; font-size: 1rem; }
+
+@media (max-width: 640px) {
+  .answer-card { padding: 28px 20px; }
+  .answer-number { font-size: 84px; }
+  .syl-txt { font-size: 24px; }
+}
+
+/* ============ PRINT ============ */
+/* Answer + split + scansion only, per spec -- everything else (header,
+   nav, cross-links, ambiguity/tricky-word prose) is chrome or extra
+   reading, not the thing a worksheet print needs. */
+@media print {
+  .ws-header, .ws-footer, .answer-stress, .tag-row,
+  .callout, .tricky-note, .muted-note, .crosslinks { display: none !important; }
+  body { background: #fff; color: #000; }
+  .answer-card { border: none; padding: 0; }
+  .answer-number { color: #000; }
+  .syl-mark.s, .syl-mark.u { color: #000; }
+}

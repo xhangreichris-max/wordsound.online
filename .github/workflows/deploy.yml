@@ -1,0 +1,94 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy should ever be in flight; a second push mid-deploy
+# should queue behind it, not race it and cancel it.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # cmudict.dict and count_1w.txt (~24MB combined) are downloaded on
+      # demand by parse_cmudict.ensure_data_files() -- see that function
+      # for why scowl_70.txt isn't part of this (it's committed instead).
+      # Keyed on parse_cmudict.py's own hash so the cache invalidates
+      # itself if the pinned download URLs ever change, without needing
+      # a manual cache-bust.
+      - uses: actions/cache@v4
+        with:
+          path: data/
+          key: data-${{ hashFiles('scripts/parse_cmudict.py') }}
+
+      - name: Install dependencies
+        run: pip install requests pillow
+
+      - name: Prepare data
+        run: python scripts/parse_cmudict.py
+
+      - name: Build site
+        run: python scripts/build.py
+
+      - name: Guard -- verify build output before deploying
+        run: |
+          set -e
+
+          if [ ! -f output/sitemap.xml ]; then
+            echo "::error::output/sitemap.xml is missing"
+            exit 1
+          fi
+
+          html_count=$(find output -name "*.html" | wc -l)
+          if [ "$html_count" -lt 50 ]; then
+            echo "::error::only $html_count HTML files in output/, expected at least 50"
+            exit 1
+          fi
+
+          if grep -rl "noindex" output --include="*.html" > /dev/null; then
+            echo "::error::at least one page still carries a noindex meta tag"
+            grep -rl "noindex" output --include="*.html"
+            exit 1
+          fi
+
+          if [ ! -f output/CNAME ] || [ "$(cat output/CNAME)" != "wordsound.online" ]; then
+            echo "::error::output/CNAME is missing or has the wrong content"
+            exit 1
+          fi
+
+          if [ ! -f assets/fonts/DejaVuSerif.ttf ]; then
+            echo "::error::assets/fonts/DejaVuSerif.ttf is missing (required for og-image generation)"
+            exit 1
+          fi
+
+          echo "Guard checks passed: $html_count HTML files, no noindex, CNAME OK, font present."
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: output
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

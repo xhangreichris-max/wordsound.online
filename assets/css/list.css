@@ -1,0 +1,325 @@
+/* WordSound design-system base: tokens, header, footer, action-bar,
+   sidebar, word rows (.wr), and the letter-section layout used by list
+   pages. word.css, counter.css, and about.css each link this file
+   alongside their own page-specific rules rather than duplicating any of
+   it -- this is the one file none of them fork. */
+
+:root {
+  --paper: #FBFAF7;
+  --ink: #14110E;
+  --stress: #B33F26;
+  --unstress: #8A857D;
+  --rule: #E0DBD2;
+  --wash: #F2EEE6;
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --max: 1280px;
+}
+html[data-theme="dark"] {
+  --paper: #14110E;
+  --ink: #FBFAF7;
+  --wash: #1E1A16;
+  --rule: #2E2822;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.5;
+}
+a { color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+.num { font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+.icon { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; vertical-align: -0.15em; }
+/* .ico: the sprite-referencing <svg><use></svg> pairs used for the two
+   per-row buttons (favorite, copy). Sized/colored here, not per-element --
+   500 rows x 2 icons means any per-element styling is 1,000x duplicated. */
+.ico { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; vertical-align: -0.15em; }
+
+/* ============ HEADER ============ */
+.ws-header { background: var(--ink); color: var(--paper); }
+.ws-header .wrap { display: flex; align-items: center; gap: 32px; min-height: 76px; }
+.wordmark { font-family: var(--serif); text-decoration: none; color: var(--paper); line-height: 1.05; }
+.wordmark .line1 { display: block; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.06em; }
+.wordmark .line2 {
+  display: block; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--unstress); margin-top: 2px;
+}
+.ws-nav { display: flex; gap: 28px; margin: 0 auto; }
+.ws-nav a {
+  color: var(--paper); text-decoration: none; font-size: 0.92rem; padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.ws-nav a.active { border-bottom-color: var(--stress); color: var(--stress); }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.fav-pill, .theme-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid rgba(251,250,247,0.3); color: var(--paper);
+  border-radius: 999px; padding: 7px 14px; font-size: 0.85rem;
+}
+.theme-toggle { padding: 7px; }
+.fav-pill .icon.fav-active { fill: var(--stress); stroke: var(--stress); }
+
+/* ============ HERO ============ */
+.hero { padding: 48px 0 32px; }
+.hero .wrap { display: grid; grid-template-columns: 1.2fr 0.9fr auto; gap: 32px; align-items: center; }
+.eyebrow { font-family: var(--serif); font-style: italic; color: var(--stress); margin: 0 0 6px; font-size: 1.05rem; }
+h1.page-title { font-family: var(--serif); margin: 0 0 14px; line-height: 1.05; font-size: clamp(2.2rem, 4.5vw, 3.4rem); }
+h1.page-title .accent { display: block; color: var(--stress); font-style: italic; }
+.hero-intro { max-width: 52ch; color: var(--unstress); margin: 0 0 24px; font-size: 1.02rem; }
+.badges { display: flex; gap: 22px; flex-wrap: wrap; }
+.badge { display: flex; align-items: flex-start; gap: 8px; max-width: 170px; }
+.badge .icon { width: 1.6em; height: 1.6em; color: var(--stress); flex-shrink: 0; margin-top: 2px; }
+.badge strong { display: block; font-size: 0.88rem; }
+.badge span { display: block; font-size: 0.78rem; color: var(--unstress); }
+.hero-art { text-align: center; }
+.hero-art img { max-width: 100%; height: auto; }
+.stats-rail { text-align: right; white-space: nowrap; }
+.stats-rail .big { font-size: 1.6rem; font-weight: 800; font-family: var(--sans); }
+.stats-rail .lbl { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--unstress); margin-bottom: 14px; }
+.stats-rail .scan { color: var(--stress); font-size: 1.1rem; margin: 10px 0; }
+.stats-rail .tagline { font-family: var(--serif); font-style: italic; color: var(--unstress); font-size: 0.85rem; }
+
+/* margin decoration hook -- empty until real transparent PNGs exist */
+.margin-deco { display: none; }
+@media (min-width: 1400px) {
+  .margin-deco {
+    display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 90px;
+    background-repeat: no-repeat; background-position: top 200px left 20px; pointer-events: none;
+  }
+}
+
+/* ============ ACTION BAR ============ */
+.action-bar { background: var(--ink); position: sticky; top: 0; z-index: 20; }
+.action-bar .wrap { display: flex; gap: 12px; align-items: center; padding: 12px 28px; }
+.search-wrap { flex: 1 1 auto; position: relative; }
+.search-wrap .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--unstress); }
+#search-input {
+  width: 100%; padding: 10px 14px 10px 36px; border-radius: 8px; border: 1px solid rgba(251,250,247,0.2);
+  background: rgba(251,250,247,0.08); color: var(--paper); font-size: 0.95rem;
+}
+#search-input::placeholder { color: var(--unstress); }
+.ab-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px;
+  border: 1px solid rgba(251,250,247,0.3); background: transparent; color: var(--paper); font-size: 0.88rem;
+  white-space: nowrap;
+}
+.ab-btn.filled { background: var(--stress); border-color: var(--stress); color: #fff; }
+
+/* ============ BODY LAYOUT ============ */
+.body-grid { display: grid; grid-template-columns: 240px 1fr; gap: 28px; padding: 28px 0 56px; align-items: start; position: relative; }
+
+/* ---- sidebar ---- */
+.sidebar { background: var(--ink); color: var(--paper); border-radius: 8px; padding: 20px; position: sticky; top: 76px; }
+.sb-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--unstress); margin: 0 0 4px; }
+.sb-sub { font-size: 0.78rem; color: var(--unstress); margin: 0 0 14px; }
+.letter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 22px; }
+.letter-btn {
+  display: flex; align-items: center; justify-content: center; aspect-ratio: 1;
+  border-radius: 999px; background: rgba(251,250,247,0.08); color: var(--paper);
+  text-decoration: none; font-size: 0.85rem; border: none;
+}
+.letter-btn.active { background: var(--stress); color: #fff; }
+.letter-btn.disabled { opacity: 0.4; pointer-events: none; }
+.sb-block { border-top: 1px solid rgba(251,250,247,0.15); padding-top: 16px; margin-top: 16px; }
+.sb-links { list-style: none; margin: 0; padding: 0; }
+.sb-links li { margin-bottom: 8px; }
+.sb-links a { text-decoration: none; font-size: 0.88rem; color: var(--paper); opacity: 0.9; }
+.sb-links a:hover { color: var(--stress); opacity: 1; }
+.popular-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; text-decoration: none; color: var(--paper); }
+.popular-row .n { font-family: var(--sans); font-weight: 800; color: var(--stress); font-size: 1.1rem; }
+.popular-row .lbl { font-size: 0.8rem; color: var(--unstress); }
+.explore-link { display: inline-block; margin-top: 8px; font-size: 0.85rem; color: var(--stress); text-decoration: none; }
+
+/* ---- main column ---- */
+.main-col { background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 28px 20px; }
+.letter-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 22px 0 8px; border-bottom: 1px solid var(--rule); background-repeat: no-repeat; background-position: right top; }
+.letter-head .letter { font-family: var(--serif); font-size: 3.2rem; color: var(--stress); line-height: 1; }
+.letter-head .letter-count { color: var(--unstress); font-size: 0.85rem; letter-spacing: 0.03em; }
+.letter-head .letter-range { margin-left: auto; color: var(--unstress); font-size: 0.8rem; }
+.pull-quote { font-family: var(--serif); font-style: italic; color: var(--unstress); border-bottom: 2px solid var(--stress); display: inline-block; padding-bottom: 4px; margin: 14px 0 6px; }
+
+/* Row-internal classes are deliberately terse (.wr .w .s .c .f .cp .i) --
+   repeated 500x/page, so every saved byte here is really saved. Everything
+   outside a word row keeps readable names. */
+.wr {
+  display: grid; grid-template-columns: 1fr auto auto auto auto; align-items: center; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid var(--rule); text-decoration: none; color: var(--ink);
+  transition: background 120ms;
+}
+.wr:hover { background: var(--wash); }
+.wr .w { font-family: var(--serif); font-size: 1.0625rem; }
+.wr .s { font-size: 0.9375rem; color: var(--unstress); white-space: nowrap; }
+.wr .c { color: var(--stress); font-size: 0.875rem; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.wr .f, .wr .cp {
+  background: none; border: none; color: var(--unstress); padding: 4px; display: inline-flex;
+  border-radius: 4px;
+}
+.wr .i { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; }
+.wr .f:hover, .wr .cp:hover { color: var(--stress); }
+.wr .f.fav-active .i { fill: var(--stress); stroke: var(--stress); }
+.wr[hidden], .letter-section[hidden] { display: none !important; }
+.wr.extra[hidden] { display: none; }
+.view-all-btn {
+  display: block; margin: 10px auto 4px; padding: 8px 18px; border: 1px solid var(--rule);
+  background: var(--wash); border-radius: 999px; font-size: 0.85rem; color: var(--ink);
+}
+.no-results { padding: 24px 0; color: var(--unstress); text-align: center; display: none; }
+.no-results.show { display: block; }
+
+/* ---- list-copy: the how-to-use / what-makes / commonly-miscounted
+   prose block, below the word list, still inside .main-col. Left-aligned
+   and capped at 680px rather than running the full width of the word
+   grid -- this is a reading column, not another data table. */
+.list-copy { max-width: 680px; margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--rule); }
+.list-copy h2 { font-family: var(--serif); font-size: 1.375rem; color: var(--ink); margin: 32px 0 12px; }
+.list-copy h2:first-child { margin-top: 0; }
+.list-copy p { font-family: var(--sans); font-size: 1rem; line-height: 1.65; color: var(--ink); margin: 0 0 12px; }
+.list-copy a { color: var(--stress); }
+
+/* ============ CROSS-PROMO ============ */
+.cross-promo { background: var(--ink); color: var(--paper); padding: 40px 0; }
+.cross-promo .wrap { display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; }
+.cross-promo h2 { font-family: var(--serif); font-size: 1.6rem; margin: 0 0 10px; max-width: 20ch; }
+.cross-promo p { color: var(--unstress); max-width: 40ch; margin: 0 0 16px; }
+.cross-promo .ab-btn.filled { display: inline-flex; }
+.promo-art { position: relative; text-align: center; }
+.promo-art img { max-width: 230px; height: auto; display: block; }
+.promo-example { font-family: var(--sans); font-size: 0.9rem; margin-top: 8px; }
+.promo-example .n { color: var(--stress); }
+
+/* ============ TRUST BAR ============ */
+.trust-bar { background: var(--wash); padding: 32px 0; }
+.trust-bar .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.trust-item { display: flex; gap: 12px; align-items: flex-start; }
+.trust-item .icon { width: 1.7em; height: 1.7em; color: var(--stress); flex-shrink: 0; }
+.trust-item strong { display: block; font-size: 0.92rem; }
+.trust-item span { font-size: 0.8rem; color: var(--unstress); }
+
+/* ============ FOOTER ============ */
+.ws-footer { border-top: 1px solid var(--rule); padding: 40px 0 24px; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 24px; margin-bottom: 24px; }
+.footer-grid h3 { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--unstress); margin: 0 0 12px; }
+.footer-grid ul { list-style: none; margin: 0; padding: 0; }
+.footer-grid li { margin-bottom: 8px; }
+.footer-grid a { text-decoration: none; font-size: 0.9rem; }
+.footer-tagline { color: var(--unstress); font-size: 0.85rem; margin-top: 8px; max-width: 30ch; }
+.footer-bottom { border-top: 1px solid var(--rule); padding-top: 16px; color: var(--unstress); font-size: 0.8rem; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .stats-rail { text-align: left; }
+  .body-grid { grid-template-columns: 1fr; }
+  /* min-width:0 on .sidebar itself, not just .letter-grid below: .sidebar
+     is the actual grid item inside .body-grid's 1fr track. .letter-grid's
+     flex-basis:100% resolves against .sidebar's main size, which is
+     indefinite mid-calculation, so percentage flex-basis falls back to
+     "auto" (content size) right when the browser is computing .sidebar's
+     own min-content contribution -- letter-grid's min-width:0 doesn't
+     reach far enough up the chain to stop that. Without this, .sidebar
+     (and with it .body-grid's track and the whole page) was being forced
+     to 1384px+ wide by the unwrapped 27-button letter strip's natural
+     width, even though the strip itself scrolls fine in isolation. */
+  .sidebar { min-width: 0; position: sticky; top: 60px; z-index: 15; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  /* 27 buttons (# + A-Z) at the 44px tap-target size below would overflow
+     any wrapped grid on a phone-width screen -- scroll horizontally
+     instead of wrapping to more rows. */
+  .letter-grid {
+    grid-template-columns: none; display: flex; flex-wrap: nowrap; overflow-x: auto;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; -ms-overflow-style: none;
+    min-width: 0; flex: 1 1 100%; margin-bottom: 0;
+  }
+  .letter-grid::-webkit-scrollbar { display: none; }
+  .letter-btn { flex: 0 0 44px; width: 44px; height: 44px; scroll-snap-align: start; }
+  .sb-block { flex: 1 1 auto; border-top: none; margin-top: 0; padding-top: 0; }
+  .sb-block.more-lists { order: 3; flex-basis: 100%; }
+
+  /* Header: nav wraps to its own centered line below the wordmark/actions
+     row rather than running off the right edge (list.css previously had no
+     mobile rule for the header at all). */
+  .ws-header .wrap { flex-wrap: wrap; justify-content: space-between; row-gap: 10px; min-height: auto; padding-top: 14px; padding-bottom: 14px; }
+  .ws-nav { order: 3; flex-basis: 100%; justify-content: center; margin: 0; }
+}
+@media (max-width: 640px) {
+  .hero-art, .stats-rail { display: none; }
+  .badges { gap: 14px; }
+  .wr { grid-template-columns: 1fr auto; grid-template-rows: auto auto; row-gap: 2px; min-height: 44px; }
+  .wr .w { grid-column: 1 / 2; grid-row: 1; }
+  .wr .s { grid-column: 1 / 2; grid-row: 2; }
+  .wr .c { grid-row: 1; }
+  .wr .f, .wr .cp { grid-row: 1 / 3; }
+  /* Same box-size-not-icon-size approach as the letter buttons: the svg
+     stays .i's usual size, the button itself becomes a real 44px target.
+     The row's own min-height (above) is already 44px, so this doesn't
+     grow the row -- it just fills the height that was already reserved. */
+  .wr .f, .wr .cp { width: 44px; height: 44px; justify-content: center; }
+  .ab-btn span.label { display: none; }
+  .trust-bar .wrap { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Header, continued: drop the subtitle line and tighten the nav so three
+     links fit one centered row; if they still don't fit at this width,
+     scroll horizontally rather than wrapping to a third line. */
+  .wordmark .line2 { display: none; }
+  /* Wordmark + actions (fav pill + theme toggle) need to share line one at
+     375-414px, and didn't: at the base 32px column-gap plus the full
+     "Favorites" label, their combined width (~326px) exceeded the ~319px
+     available inside a 375px viewport, so the actions pill wrapped to its
+     own line instead of sitting beside the wordmark. Tightening the gap and
+     dropping the label (icon + count stays) recovers enough width to keep
+     them on one row down to 320px. */
+  .ws-header .wrap { column-gap: 10px; }
+  .header-actions { gap: 8px; }
+  .fav-pill .fav-label { display: none; }
+  .ws-nav {
+    gap: 18px; overflow-x: auto; flex-wrap: nowrap;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .ws-nav::-webkit-scrollbar { display: none; }
+  .ws-nav a { font-size: 0.875rem; letter-spacing: -0.01em; white-space: nowrap; }
+
+  /* Same box-size-not-icon-size approach as the letter buttons and the
+     row favorite/copy buttons above: theme-toggle measured 30x30 (7px
+     padding around a ~16px icon) on every page type -- missed by that
+     earlier pass, which only covered letter buttons and .wr rows. */
+  .theme-toggle { width: 44px; height: 44px; justify-content: center; padding: 0; }
+
+  /* Action-bar controls, round 3 of the same audit: .ab-btn is already
+     inline-flex with align-items:center, so a min-height alone re-centers
+     its content automatically -- no display change needed. Type size and
+     button/input WIDTH are untouched; only the vertical box grows. */
+  .ab-btn, #search-input { min-height: 44px; }
+
+  /* .view-all-btn is a real <button>: `display:block` here still
+     shrink-wraps to content width (confirmed empirically -- buttons are
+     intrinsically sized even under display:block) and centers via
+     margin:auto, so switching to flex isn't needed and would risk that
+     centering. Padding alone gets it to 44px, keeping the "padding, not
+     scaled type" rule literal here too. */
+  .view-all-btn { padding: 13px 18px; }
+}
+
+/* ============ PRINT ============ */
+@media print {
+  .ws-header, .ws-nav, .sidebar, .action-bar, .cross-promo, .trust-bar, .ws-footer,
+  .hero-art, .stats-rail, .badges, img, button, .view-all-btn, .list-copy { display: none !important; }
+  body { background: #fff; color: #000; font-size: 11pt; line-height: 1.4; }
+  @page { margin: 2cm; }
+  .print-header { display: block !important; margin-bottom: 16px; }
+  .print-header h1 { font-family: var(--serif); font-size: 20pt; margin: 0 0 4px; }
+  .body-grid { display: block; padding: 0; }
+  .main-col { border: none; padding: 0; }
+  .letter-head { break-after: avoid; background-image: none !important; }
+  .wr, .wr[hidden], .wr.extra[hidden] { display: flex !important; gap: 10px; border-bottom: 1px solid #ccc; }
+  .wr .c { display: none; }
+  .word-list-cols { column-count: 2; column-gap: 32px; }
+  .pull-quote { border-bottom: 1px solid #000; }
+}
+.print-header { display: none; }

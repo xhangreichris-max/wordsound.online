@@ -1,0 +1,125 @@
+/* WordSound syllable counter (Part 1). Shares tokens/header/footer/sprite
+   pattern with assets/css/list.css (linked alongside this file) -- this
+   file only adds the tool-specific layout: editor, gutter, results, validator. */
+
+.tool-hero { padding: 28px 0 20px; }
+.tool-hero .wrap { max-width: 760px; }
+.tool-hero h1 { font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.4rem); margin: 6px 0 8px; line-height: 1.1; }
+.tool-hero .hero-intro { margin: 0; max-width: 62ch; }
+
+.tool-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px;
+  padding: 0 0 36px;
+}
+.panel { background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; }
+.panel-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; border-bottom: 1px solid var(--rule);
+  font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--unstress);
+}
+
+/* ---- editor (gutter + textarea) ---- */
+/* --row-h is the single source of truth for per-line height, shared by the
+   gutter rows and the textarea's own line-height. It's computed from the
+   TEXTAREA's font-size, not the gutter's -- .gline intentionally uses a
+   smaller font-size than .input-ta (for visual hierarchy), and line-height
+   as a unitless multiplier resolves against EACH element's own font-size,
+   so "line-height:1.6" on both looked identical in the stylesheet but
+   computed to two different pixel heights (~19.95px vs ~24.32px), drifting
+   the gutter out of alignment with its text by 1-2px per line -- small
+   enough to not be obvious over 3 lines, compounding over dozens. Pinning
+   both to one calc() value decouples row height from either element's own
+   font-size entirely. */
+.editor { --row-h: calc(0.95rem * 1.6); --pad-top: 8px; display: flex; align-items: stretch; }
+.gutter {
+  flex: 0 0 auto; min-width: 46px; overflow: hidden; padding-top: var(--pad-top);
+  background: var(--wash); border-right: 1px solid var(--rule);
+  font-family: var(--sans); font-size: 0.78rem;
+}
+.gline {
+  height: var(--row-h); line-height: var(--row-h); padding: 0 8px; text-align: right;
+  white-space: nowrap; display: flex; flex-direction: column; justify-content: center;
+}
+.gcount { color: var(--stress); font-weight: 700; font-variant-numeric: tabular-nums; }
+.gscan { color: var(--unstress); font-size: 0.7em; letter-spacing: 0.05em; opacity: 0.85; }
+.gline.bump .gcount { animation: bump 120ms ease-out; }
+@keyframes bump { from { transform: translateY(-3px); opacity: 0.4; } to { transform: translateY(0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gline.bump .gcount { animation: none; } }
+
+.input-ta {
+  flex: 1 1 auto; resize: vertical; min-height: 260px; max-height: 70vh;
+  border: none; outline: none; padding: var(--pad-top) 14px;
+  font-family: var(--mono); font-size: 0.95rem; line-height: var(--row-h);
+  white-space: pre; overflow-x: auto; overflow-y: auto;
+  background: var(--paper); color: var(--ink);
+}
+.input-ta::placeholder { color: var(--unstress); }
+
+/* ---- results panel ---- */
+.totals-bar { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--rule); }
+.stat { flex: 1 1 0; padding: 12px 10px; text-align: center; border-right: 1px solid var(--rule); }
+.stat:last-child { border-right: none; }
+.stat .n { font-size: 1.3rem; font-weight: 800; color: var(--stress); font-variant-numeric: tabular-nums; }
+.stat .lbl { display: block; font-size: 0.72rem; color: var(--unstress); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; max-height: 40vh; overflow-y: auto; }
+.chip { background: var(--wash); border: 1px solid var(--rule); border-radius: 8px; padding: 6px 10px; text-align: center; min-width: 54px; }
+.chip .cw { font-family: var(--serif); font-size: 0.95rem; display: block; }
+.chip .cs { font-size: 0.72rem; color: var(--unstress); display: block; margin-top: 1px; }
+.chip .approx { color: var(--stress); font-weight: 700; margin-left: 2px; cursor: help; }
+.empty-note { padding: 24px 16px; color: var(--unstress); font-size: 0.9rem; text-align: center; }
+
+/* ---- validator ---- */
+.validator { border-top: 1px solid var(--rule); padding: 12px 16px; }
+.validator-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.validator-row label { font-size: 0.82rem; color: var(--unstress); }
+.validator-row select {
+  font-family: var(--sans); font-size: 0.85rem; padding: 5px 8px; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
+}
+.vlines { list-style: none; margin: 0; padding: 0; font-size: 0.85rem; }
+.vlines li { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed var(--rule); }
+.vlines .ok { color: var(--unstress); }
+.vlines .delta { color: var(--stress); font-weight: 600; }
+
+/* .ab-btn (list.css) assumes it always sits on the dark --ink action-bar --
+   its border/text colors are calibrated for that pairing specifically
+   (paper-colored text + a paper-tinted border, both correct there because
+   --ink and --paper stay opposite ends of the palette in both themes). On
+   this page the buttons sit directly on the --paper panel background
+   instead, where that same styling put paper-colored text on a
+   paper-colored background -- invisible in both light and dark mode.
+   Override just the two colors for this context; keep the shared layout. */
+.tool-actions { display: flex; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--rule); }
+.tool-actions .ab-btn { color: var(--ink); border-color: var(--rule); }
+.tool-actions .ab-btn:hover { background: var(--wash); }
+
+.below-tool { max-width: 68ch; padding: 8px 0 40px; color: var(--unstress); font-size: 0.92rem; }
+.below-tool a { color: var(--ink); }
+.below-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; padding: 0; list-style: none; }
+.below-links a { font-weight: 600; color: var(--ink); text-decoration: none; }
+.below-links a:hover { color: var(--stress); }
+
+/* ---- homepage word-list directory ---- */
+.list-directory { padding: 8px 0 48px; border-top: 1px solid var(--rule); }
+.list-directory h2 { font-family: var(--serif); font-size: 1.3rem; margin: 24px 0 16px; }
+.dir-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.dir-card {
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 16px;
+}
+.dir-card:hover { border-color: var(--stress); }
+.dir-name { font-family: var(--serif); font-size: 1.05rem; }
+.dir-count { font-size: 0.78rem; color: var(--stress); font-weight: 700; }
+.dir-blurb { font-size: 0.82rem; color: var(--unstress); margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .tool-grid { grid-template-columns: 1fr; }
+  .stat { flex-basis: 50%; }
+  .dir-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .input-ta { font-size: 0.88rem; }
+  .gutter { min-width: 38px; }
+  .dir-grid { grid-template-columns: 1fr; }
+}

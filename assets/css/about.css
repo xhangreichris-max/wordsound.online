@@ -1,0 +1,10 @@
+/* WordSound About page (Task 2). Shares tokens/header/footer with
+   list.css (linked alongside this file) -- deliberately no hero art, no
+   sidebar, single column. */
+
+.about-body { max-width: 680px; margin: 0 auto; padding: 48px 0 64px; }
+.about-body h1 { font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.3rem); margin: 0 0 20px; line-height: 1.15; }
+.about-body h2 { font-family: var(--serif); font-size: 1.15rem; margin: 32px 0 10px; }
+.about-body p { margin: 0 0 14px; color: var(--ink); }
+.about-body p.intro { font-size: 1.05rem; color: var(--unstress); }
+.about-body a { color: var(--stress); }
