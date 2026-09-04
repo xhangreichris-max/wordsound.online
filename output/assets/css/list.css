@@ -216,30 +216,53 @@ h1.page-title .accent { display: block; color: var(--stress); font-style: italic
   .hero .wrap { grid-template-columns: 1fr; }
   .stats-rail { text-align: left; }
   .body-grid { grid-template-columns: 1fr; }
-  /* min-width:0 on .sidebar itself, not just .letter-grid below: .sidebar
-     is the actual grid item inside .body-grid's 1fr track. .letter-grid's
-     flex-basis:100% resolves against .sidebar's main size, which is
-     indefinite mid-calculation, so percentage flex-basis falls back to
-     "auto" (content size) right when the browser is computing .sidebar's
-     own min-content contribution -- letter-grid's min-width:0 doesn't
-     reach far enough up the chain to stop that. Without this, .sidebar
-     (and with it .body-grid's track and the whole page) was being forced
-     to 1384px+ wide by the unwrapped 27-button letter strip's natural
-     width, even though the strip itself scrolls fine in isolation. */
-  .sidebar { min-width: 0; position: sticky; top: 60px; z-index: 15; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
-  /* 27 buttons (# + A-Z) at the 44px tap-target size below would overflow
-     any wrapped grid on a phone-width screen -- scroll horizontally
-     instead of wrapping to more rows. */
+  /* .sidebar itself becomes a non-box: display:contents removes ITS OWN
+     rendered box (previously position:sticky, which -- confirmed with
+     Playwright by scrolling a live page and checking elementFromPoint --
+     visually overlapped .main-col's word rows once scrolled far enough
+     that the stuck sidebar's box geometrically covered it. That overlap
+     never showed up in prior mobile checks because they only ever
+     measured the page at scroll position 0, where the sidebar still sits
+     in its normal, non-overlapping flow position.)
+     display:contents promotes .sidebar's three children -- .sb-browse,
+     .sb-block.more-lists, .sb-block.popular-words -- to be direct items
+     of .body-grid's own grid, ordered independently below via `order`,
+     each in normal document flow (no position:fixed/sticky/absolute that
+     could overlap a sibling again). */
+  .sidebar { display: contents; }
+  .sb-browse { order: -1; }
+  .main-col { order: 0; }
+  .sb-block.popular-words { order: 1; }
+  .sb-block.more-lists { order: 2; }
+  .sb-browse, .sb-block.more-lists, .sb-block.popular-words {
+    background: var(--ink); border-radius: 8px; padding: 20px;
+    border-top: none; margin-top: 0;
+  }
+  /* .sb-browse is now a direct grid item of .body-grid (promoted via
+     .sidebar's display:contents above). Grid items default to
+     min-width:auto -- their content's min-content size -- as their own
+     minimum contribution to the track, regardless of the track's own
+     `1fr` sizing. .letter-grid inside is a flex-nowrap row, whose
+     min-content size is the UNWRAPPED width of all 27 buttons (1344px+),
+     so without this override that becomes .sb-browse's min-width,
+     forcing .body-grid's 1fr track -- and the whole page -- to grow to
+     fit it, the exact same failure mode the old .sidebar-based layout
+     had (see the version-controlled history of this block). */
+  .sb-browse { min-width: 0; }
+  /* .letter-grid no longer sits inside another flex-wrap container (that
+     was .sidebar, pre-display:contents) -- it's a normal block-level
+     child of .sb-browse now, so it just takes .sb-browse's full content
+     width on its own, no flex-basis/min-width juggling needed to keep it
+     from forcing the page wide. 27 buttons (# + A-Z) at the 44px
+     tap-target size below would overflow any wrapped grid on a
+     phone-width screen -- scroll horizontally instead of wrapping. */
   .letter-grid {
     grid-template-columns: none; display: flex; flex-wrap: nowrap; overflow-x: auto;
     scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
     scrollbar-width: none; -ms-overflow-style: none;
-    min-width: 0; flex: 1 1 100%; margin-bottom: 0;
   }
   .letter-grid::-webkit-scrollbar { display: none; }
   .letter-btn { flex: 0 0 44px; width: 44px; height: 44px; scroll-snap-align: start; }
-  .sb-block { flex: 1 1 auto; border-top: none; margin-top: 0; padding-top: 0; }
-  .sb-block.more-lists { order: 3; flex-basis: 100%; }
 
   /* Header: nav wraps to its own centered line below the wordmark/actions
      row rather than running off the right edge (list.css previously had no

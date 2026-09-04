@@ -792,14 +792,16 @@ def render_list_page(cat, cat_data, all_data, build_year, list_copy, linkable_wo
 </div>
 <div class="body-grid">
   <aside class="sidebar">
-    <p class="sb-label">Browse Words</p>
-    <p class="sb-sub">Jump to a letter</p>
-    <div class="letter-grid">{"".join(letter_btns)}</div>
+    <div class="sb-browse">
+      <p class="sb-label">Browse Words</p>
+      <p class="sb-sub">Jump to a letter</p>
+      <div class="letter-grid">{"".join(letter_btns)}</div>
+    </div>
     <div class="sb-block more-lists">
       <p class="sb-label">More Word Lists</p>
       <ul class="sb-links">{more_lists_html}</ul>
     </div>
-    <div class="sb-block">
+    <div class="sb-block popular-words">
       <p class="sb-label">Popular Words</p>
       <p class="sb-sub">Most common by category</p>
       {popular_html}
