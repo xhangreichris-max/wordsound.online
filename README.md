@@ -121,3 +121,21 @@ None of these require attribution in the built site itself.
 See [DEPLOY.md](DEPLOY.md) for the one-time GitHub Pages + DNS setup.
 Every push to `main` rebuilds and redeploys automatically via
 `.github/workflows/deploy.yml`.
+
+## Testing notes
+
+A mobile responsive check that only measures geometry at `scrollY: 0`
+can pass while the page is still broken -- a `position: sticky` element
+detaches from normal flow and can overlap a sibling below it, but only
+once scrolled far enough to actually stick. That's exactly how a sidebar
+overlaying the word list on list pages survived three separate mobile
+Playwright passes: every one of them loaded the page, measured layout,
+and never scrolled.
+
+When verifying any fix that touches `position: sticky`/`fixed`, or
+anything below the `900px`/`640px` breakpoints in `list.css`: sweep
+scroll positions (not just the initial one) and use
+`document.elementFromPoint(x, y)` at each step to confirm what's
+actually on top, rather than only comparing bounding-rect geometry.
+Two elements' rects can be measured as non-overlapping at load and
+overlapping 600px later.
